@@ -1,0 +1,60 @@
+MPLINK 4.31, Linker
+Linker Map File - Created Sat Nov 03 11:47:49 2018
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x0000dc
+    .config_2007_PRUEBA.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x000071      
+                            0x002007    0x002007      
+            114 out of 2183 program addresses used, program memory utilization is 5%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                  BOTONES   0x000043    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                    CONFI   0x00002c    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+               DELAY_20MS   0x00005d    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                   ESPERA   0x000043    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                  FIN_RUT   0x00005c    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                  FIN_T0I   0x000026    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                       L1   0x000061    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                       L2   0x000064    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+               MOSTRAR_D2   0x000015    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+               MOSTRAR_D3   0x00001b    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+               MOSTRAR_D4   0x000021    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                    SUMAR   0x00004a    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+              TAB_DISPLAY   0x000067    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+               MOSTRAR_D2   0x000015    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+               MOSTRAR_D3   0x00001b    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+               MOSTRAR_D4   0x000021    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                  FIN_T0I   0x000026    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                    CONFI   0x00002c    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                  BOTONES   0x000043    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                   ESPERA   0x000043    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                    SUMAR   0x00004a    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                  FIN_RUT   0x00005c    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+               DELAY_20MS   0x00005d    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                       L1   0x000061    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+                       L2   0x000064    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+              TAB_DISPLAY   0x000067    program     static C:\Users\andrs\Google Drive\Documentos\UNLA\1er Año\Arquitectura de Computadoras\Practica\Prueba\prueba.asm
+
+
