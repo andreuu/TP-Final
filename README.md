@@ -17,6 +17,7 @@ Falta:
 
 
 Ejercicio (lo pongo aca asi lo tenemos a mano):
+
 Realizar un programa que permita restar dos números decimales de tres dígitos en el tablero de acuerdo con la siguiente secuencia: 
 * Se escribe un número en los displays. Con el botón G1 se incrementa el número del tablero y con el botón G2 se resta.  
 * Se presiona el botón M para permitir el ingreso del segundo número.
