@@ -7,7 +7,6 @@ Hasta ahora, el programa solo hace:
 
 Falta:
 
-* Agregar funcionalidad al boton m para que permita ingresar numero2
 * Hacer lo propio de numero1 con numero2
 * Agregar una segunda funcion al boton m para que reste los dos numeros
 * Mostrar el resultado de la resta
@@ -16,7 +15,7 @@ Falta:
 
 
 
-Ejercicio (lo pongo aca asi lo tenemos a mano):
+Objetivo:
 
 Realizar un programa que permita restar dos números decimales de tres dígitos en el tablero de acuerdo con la siguiente secuencia: 
 * Se escribe un número en los displays. Con el botón G1 se incrementa el número del tablero y con el botón G2 se resta.  
