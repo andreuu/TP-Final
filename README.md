@@ -13,6 +13,7 @@ Falta:
 
 * Corregir signo
 * Aprobar xd
+* Tocarse las tetas
 
 
 
