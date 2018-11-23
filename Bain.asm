@@ -35,6 +35,7 @@
     CalcTemp3
     DelayCounter1
     DelayCounter2
+    Deplete
     endc
     
     cblock 0x70
@@ -49,6 +50,7 @@
     ; Si no esta, automaticamente sobreescribimos las partes de la EEPROM que
     ; vamos a usar, asi no nos encontramos con algo inesperado.
     ; Si esta, entonces podemos cargar lo que queremos.
+    ;; CREO QUE NI LO VOY A AGREGAR, CAGATE
 
 ;Input_M equ RB0
 ;Input_R equ RA4
@@ -67,7 +69,6 @@ EditDigit4 equ 1
 #include <P16F628A.INC>
     __CONFIG 0x3F10 && _WDT_OFF && _LVP_OFF
     ORG 0
-    bsf CurStep,2
     goto START
     ORG 4
     goto INTERRUPT
@@ -75,6 +76,45 @@ EditDigit4 equ 1
 INTERRUPT
     goto $ ; ???
     
+GET_SEGMENTS
+    addwf PCL,f
+    retlw b'01111110' ; 0
+    retlw b'00001100' ; 1
+    retlw b'10110110' ; 2
+    retlw b'10011110' ; 3
+    retlw b'11001100' ; 4
+    retlw b'11011010' ; 5
+    retlw b'11111010' ; 6
+    retlw b'00001110' ; 7
+    retlw b'11111110' ; 8
+    retlw b'11011110' ; 9
+    retlw b'01010100' ; 0 - Fake 0  - 10 A
+    retlw b'00000000' ;   - Blank   - 11 B
+    retlw b'10000000' ; - - Minus   - 12 C
+    retlw b'10101010' ; X - Error and on
+    retlw b'10101010' ; X
+    retlw b'10101010' ; X
+    retlw b'10101010' ; X
+    retlw b'10101010' ; X
+    
+EEPROM_Set MACRO thedata,theadr
+    movf thedata,w
+    movwf EEDATA
+    movf theadr,w
+    movwf EEADR
+    ENDM
+    
+EEPROM_Save MACRO theadr
+    movf theadr,w ; Toma el valor en esa direccion...
+    bsf STATUS,RP0
+    movwf EEDATA 
+    movf theadr,w ; Como tambien usa la misma direccion ex di di di di
+    movwf EEADR
+    bsf EECON1,WREN ; Para activarlo
+    call EEPROM_Write
+    bcf EECON1,WREN ; Asi no escribimos por accidente
+    bcf STATUS,RP0
+    ENDM
 
     
 START
@@ -90,8 +130,11 @@ START
     bcf STATUS,RP0
     call NORMALIZE_WORK
     call DisplayWork
+    bsf CurStep,2
+    call StepNum1
     
 WAIT_FOR_INPUT ; Loop para esperar que el usuario haga alguna mierda eeeeeeee
+    call DELAYPROG
     call DisplayWork
     btfsc PORTB,RB0
     call Parse_M
@@ -130,14 +173,34 @@ RotateBad
     bsf CurStep,3 ; Ponemos un bit en posicion 3 que terminara siendo rotado
     goto Parse_M ; Otra vez, otra vez! Wheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
 ParseMEnd
-    btfss PORTA,RA4
+    btfss PORTB,RB0
     return
     goto $-2
     
 Parse_R
+    clrf CurStep
+    bsf CurStep,2
+    clrf Work_Uni
+    clrf Work_Dec
+    clrf Work_Cen
+    clrf Work_Sign
+    clrf Num1_Uni
+    clrf Num1_Dec
+    clrf Num1_Cen
+    clrf Num1_Sign
+    clrf Num2_Uni
+    clrf Num2_Dec
+    clrf Num2_Cen
+    clrf Num2_Sign
+    call StepNum1
     return
     
+    
+    
+    
 Parse_G1
+    btfsc CurStep,0
+    return
     decf Work_Uni,f
     call NORMALIZE_WORK
     call PostWorkActions
@@ -146,12 +209,17 @@ Parse_G1
     goto $-2
     
 Parse_G2
+    btfsc CurStep,0
+    return
     incf Work_Uni,f
     call NORMALIZE_WORK
     call PostWorkActions
     btfss PORTA,RA7
     return
     goto $-2
+    
+    
+    
     
 PostWorkActions
     ; Tengo que ver que hacer con el signo
@@ -214,7 +282,6 @@ PostNegate
     movwf CalcTemp ; Lo guardamos un momento
     ; Tenemos que ver que display esta mas vacio para ubicar el simbolo!
 
-A_LABEL
 PosTestMacro MACRO TestAddr
     ;<editor-fold defaultstate="collapsed" desc="Macrote de prueba! !! !!!">
     local EndMacro
@@ -239,8 +306,6 @@ EndMacro
     ; Probar la posicion 1 es al pedo, ponemos lo que sea ahora mismo
     movf CalcTemp,w
     movwf Disp_Dec
-    
-B_LABEL
     
 ImFuckingDone
     
@@ -352,45 +417,121 @@ okdone2
     
     ; Listote
     return
+    
+    fill (nop),15 ; PCL se puede ir a la mierda conche su madre putogay tragasable
+    
+StepNum1 ; Venimos de StepResult
+    ; No vamos a guardar el resultado, eso es pendejotudo
+    
+    ; Mover Num1 a Work
+    movf Num1_Uni,w
+    movwf Work_Uni
+    movf Num1_Dec,w
+    movwf Work_Dec
+    movf Num1_Cen,w
+    movwf Work_Cen
+    movf Num1_Sign,w
+    movwf Work_Sign
+    return
+    
+StepNum2
+    ; Mover Work a Num1
+    movf Work_Uni,w
+    movwf Num1_Uni
+    movf Work_Dec,w
+    movwf Num1_Dec
+    movf Work_Cen,w
+    movwf Num1_Cen
+    movf Work_Sign,w
+    movwf Num1_Sign
+    
+    ; Guardar todo Num1
+    EEPROM_Save Num1_Uni
+    EEPROM_Save Num1_Dec
+    EEPROM_Save Num1_Cen
+    EEPROM_Save Num1_Sign
+    
+    ; Mover Num2 a Work
+    movf Num2_Uni,w
+    movwf Work_Uni
+    movf Num2_Dec,w
+    movwf Work_Dec
+    movf Num2_Cen,w
+    movwf Work_Cen
+    movf Num2_Sign,w
+    movwf Work_Sign
+    return
+    
+StepResult
+    ; Mover Work a Num2
+    movf Work_Uni,w
+    movwf Num2_Uni
+    movf Work_Dec,w
+    movwf Num2_Dec
+    movf Work_Cen,w
+    movwf Num2_Cen
+    movf Work_Sign,w
+    movwf Num2_Sign
+    
+    ; Guardar todo Num2
+    EEPROM_Save Num2_Uni
+    EEPROM_Save Num2_Dec
+    EEPROM_Save Num2_Cen
+    EEPROM_Save Num2_Sign
+    
+    ; Hacer la operacion magica
+    
+    movf Num1_Uni,w
+    movwf Work_Uni
+    movf Num2_Uni,w
+    subwf Work_Uni,f
+    
+    movf Num1_Dec,w
+    movwf Work_Dec
+    movf Num2_Dec,w
+    subwf Work_Dec,f
+    
+    movf Num1_Cen,w
+    movwf Work_Cen
+    movf Num2_Cen,w
+    subwf Work_Cen,f
+    
+    movf Num1_Sign,w
+    movwf Work_Sign
+    movf Num2_Sign,w
+    subwf Work_Sign,f
+    
+    call NORMALIZE_WORK
+    
+    ; Guardar resultado en Num3
+    movf Work_Uni,w
+    movwf Num3_Uni
+    movf Work_Dec,w
+    movwf Num3_Dec
+    movf Work_Cen,w
+    movwf Num3_Cen
+    movf Work_Sign,w
+    movwf Num3_Sign
+    
+    return
+    
+    
+    
+    
 
-GET_SEGMENTS
-    addwf PCL,f
-    retlw b'01111110' ; 0
-    retlw b'00001100' ; 1
-    retlw b'10110110' ; 2
-    retlw b'10011110' ; 3
-    retlw b'11001100' ; 4
-    retlw b'11011010' ; 5
-    retlw b'11111010' ; 6
-    retlw b'00001110' ; 7
-    retlw b'11111110' ; 8
-    retlw b'11011110' ; 9
-    retlw b'01010100' ; 0 - Fake 0  - 10 A
-    retlw b'00000000' ;   - Blank   - 11 B
-    retlw b'10000000' ; - - Minus   - 12 C
-    retlw b'10101010' ; X - Error and on
-    retlw b'10101010' ; X
-    retlw b'10101010' ; X
-    retlw b'10101010' ; X
-    retlw b'10101010' ; X
 
 DELAYPROG
     return
     
-DELAYPROGA
-    movlw .250
-    movwf DelayCounter1
-    movlw .8
-    movwf DelayCounter2
-    
-lop decfsz DelayCounter1,f
+EEPROM_Write
+    movlw 0x55
+    movwf EECON2
+    movlw 0xAA
+    movwf EECON2
+    bsf EECON1,WR
+    btfsc EECON1,WR
     goto $-1
-    
-    movlw .250
-    decfsz DelayCounter2,f
-    goto lop
-    RETURN
-    
+    return
     
     
     
