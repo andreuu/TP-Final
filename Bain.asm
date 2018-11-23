@@ -94,8 +94,6 @@ GET_SEGMENTS
     retlw b'10101010' ; X - Error and on
     retlw b'10101010' ; X
     retlw b'10101010' ; X
-    retlw b'10101010' ; X
-    retlw b'10101010' ; X
     
 EEPROM_Set MACRO thedata,theadr
     movf thedata,w
@@ -115,6 +113,16 @@ EEPROM_Save MACRO theadr
     bcf EECON1,WREN ; Asi no escribimos por accidente
     bcf STATUS,RP0
     ENDM
+    
+EEPROM_Read ; La lectura toma un ciclo por alguna razon
+    bsf STATUS,RP0
+    movwf EEADR
+    bsf EECON1,RD
+    btfsc EECON1,RD ; Igual pongo esto, por si la EEPROM esta dañada o cualquier wea weon wey
+    goto $-1
+    movf EEDATA,w ; Ya tenemos el dato!
+    bcf STATUS,RP0
+    return
 
     
 START
@@ -174,6 +182,7 @@ RotateBad
     goto Parse_M ; Otra vez, otra vez! Wheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
 ParseMEnd
     btfss PORTB,RB0
+    call StepPost
     return
     goto $-2
     
@@ -515,7 +524,9 @@ StepResult
     
     return
     
-    
+StepPost
+    EEPROM_Save CurStep
+    return
     
     
 

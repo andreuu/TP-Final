@@ -18,3 +18,13 @@ Hay una funcion denominada "NORMALIZE_WORK", que lo que hace es tomar los cuatro
 "Sign" representa el signo del numero. Si es 0x00, es positivo, si es 0xFF, es negativo.
 
 El codigo guarda algunos numeros a la EEPROM, pero no agregue un metodo de carga.
+
+
+3:45am:
+El boton R ahora resetea - Apretandolo, pone todos los registros en 0 y pone el estado en "Ingresando numero 1" basicamente.
+El estado se guarda ahora.
+
+Lo que todavia no hice fue leer...
+
+Tenia pensado usar un metodo de lectura que incluia una especie de "checksum", osea, buscaba en una parte especifica de la EEPROM una secuencia de numeros que yo podria asignar, de tal forma que si la EEPROM no contenia esa secuencia, entonces no cargaria datos de la EEPROM que podria tener cualquier pendejada menos la mia.
+De esta forma se podrian mitigar los errores causados por la EEPROM tener datos basura, por ejemplo numeros mas grandes de lo normal.
